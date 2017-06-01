@@ -31,7 +31,7 @@ def processInputArguments():
     # argument: -gpio set/get gpio_gen_1 gpio_gen_2
     if arg.gpio:
         # print arg.gpio
-
+        toggle = False
         set_status = False
         if len(arg.gpio) >= 2:
             if arg.gpio[0] == 'set':
@@ -39,6 +39,7 @@ def processInputArguments():
             elif arg.gpio[0] == 'clear':
                 set_status = False
             elif arg.gpio[0] == 'toggle':
+                toggle = True
                 pass
             else:
                 print "incorrect argument"
@@ -50,10 +51,15 @@ def processInputArguments():
                     # get pin number in GPIO_GEN_CH dictionary
                     gpio_pin = GPIO_GEN_CH.get(key)
                     # Setting RPi GPIO running in BCM mode
+                    GPIO.setwarnings(False)
                     GPIO.setmode(GPIO.BCM)
                     # Setting gpio_pin as output
                     GPIO.setup(gpio_pin, GPIO.OUT)
                     # Setting output status of RPi's GPIO
+                    if toggle:
+                        output_status = GPIO.input(gpio_pin)
+                        set_status = output_status ^ toggle
+
                     GPIO.output(gpio_pin, set_status)
                     print "Setting", key, '- BCM PIN [', gpio_pin, ']', ' Status: ', set_status
                 else:
@@ -77,3 +83,4 @@ if __name__ == '__main__':
     # initGPIOOutput()
     processInputArguments()
     pass
+
