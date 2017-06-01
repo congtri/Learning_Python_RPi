@@ -2,13 +2,13 @@ import argparse
 import RPi.GPIO as GPIO
 
 # Define GPIO pin on Rasberry Pi board
-GPIO_GEN_CH = {'gpio_gen_0':17,  # GPIO_GEN0, BCM pin 17
-               'gpio_gen_1':18,  # GPIO_GEN1, BCM pin 18
-               'gpio_gen_2':27,  # GPIO_GEN2, BCM pin 27
-               'gpio_gen_3':22,  # GPIO_GEN3, BCM pin 22
-               'gpio_gen_4':23,  # GPIO_GEN4, BCM pin 23
-               'gpio_gen_5':24,  # GPIO_GEN5, BCM pin 24
-               'gpio_gen_6':25}  # GPIO_GEN6, BCM pin 25
+GPIO_GEN_CH = {'gpio_gen_0': 17,  # GPIO_GEN0, BCM pin 17
+               'gpio_gen_1': 18,  # GPIO_GEN1, BCM pin 18
+               'gpio_gen_2': 27,  # GPIO_GEN2, BCM pin 27
+               'gpio_gen_3': 22,  # GPIO_GEN3, BCM pin 22
+               'gpio_gen_4': 23,  # GPIO_GEN4, BCM pin 23
+               'gpio_gen_5': 24,  # GPIO_GEN5, BCM pin 24
+               'gpio_gen_6': 25}  # GPIO_GEN6, BCM pin 25
 
 parser = argparse.ArgumentParser(description='Testing')
 parser.add_argument('-gpio',
@@ -44,7 +44,9 @@ if arg.gpio:
         for i in range(1, len(arg.gpio), 1):
             key = arg.gpio[i]
             if GPIO_GEN_CH.has_key(key):
-                print "Setting", key, '- BCM PIN [', GPIO_GEN_CH.get(key), ']', ' Status: ', set_status
+                gpio_pin = GPIO_GEN_CH.get(key)
+                print "Setting", key, '- BCM PIN [', gpio_pin, ']', ' Status: ', set_status
+                GPIO.output(gpio_pin, set_status)
             else:
                 print 'gpio argument: [', key, '] is incorrect'
                 exit(-1)
@@ -52,8 +54,6 @@ if arg.gpio:
     else:
         print 'gpio argument incorrect'
         exit(-1)
-
-
 
 if __name__ == '__main__':
     print __name__
