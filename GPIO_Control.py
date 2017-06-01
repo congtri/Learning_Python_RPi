@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import argparse
 import RPi.GPIO as GPIO
 
@@ -25,36 +26,53 @@ except:
     print 'Incorrect argument'
     exit(-1)
 
-# argument: -gpio set/get gpio_gen_1 gpio_gen_2
-if arg.gpio:
-    # print arg.gpio
 
-    set_status = False
-    if len(arg.gpio) >= 2:
-        if arg.gpio[0] == 'set':
-            set_status = True
-        elif arg.gpio[0] == 'clear':
-            set_status = False
-        elif arg.gpio[0] == 'toggle':
-            pass
-        else:
-            print "incorrect argument"
-            exit(-1)
+def processArguments():
+    # argument: -gpio set/get gpio_gen_1 gpio_gen_2
+    if arg.gpio:
+        # print arg.gpio
 
-        for i in range(1, len(arg.gpio), 1):
-            key = arg.gpio[i]
-            if GPIO_GEN_CH.has_key(key):
-                gpio_pin = GPIO_GEN_CH.get(key)
-                print "Setting", key, '- BCM PIN [', gpio_pin, ']', ' Status: ', set_status
-                GPIO.output(gpio_pin, set_status)
+        set_status = False
+        if len(arg.gpio) >= 2:
+            if arg.gpio[0] == 'set':
+                set_status = True
+            elif arg.gpio[0] == 'clear':
+                set_status = False
+            elif arg.gpio[0] == 'toggle':
+                pass
             else:
-                print 'gpio argument: [', key, '] is incorrect'
+                print "incorrect argument"
                 exit(-1)
 
-    else:
-        print 'gpio argument incorrect'
-        exit(-1)
+            for i in range(1, len(arg.gpio), 1):
+                key = arg.gpio[i]
+                if GPIO_GEN_CH.has_key(key):
+                    # get pin number in GPIO_GEN_CH dictionary
+                    gpio_pin = GPIO_GEN_CH.get(key)
+                    # Setting RPi GPIO running in BCM mode
+                    GPIO.setmode(GPIO.BCM)
+                    # Setting gpio_pin as output
+                    GPIO.setup(gpio_pin, GPIO.OUT)
+                    # Setting output status of RPi's GPIO
+                    GPIO.output(gpio_pin, set_status)
+                    print "Setting", key, '- BCM PIN [', gpio_pin, ']', ' Status: ', set_status
+                else:
+                    print 'gpio argument: [', key, '] is incorrect'
+                    exit(-1)
+
+        else:
+            print 'gpio argument incorrect'
+            exit(-1)
+
+
+def initGPIOOutput():
+    for gpio_gen in GPIO_GEN_CH:
+        gpio_pin_num = GPIO_GEN_CH.get(gpio_gen)
+        print gpio_gen, 'PIN[', gpio_pin_num, ']'
+        GPIO.setup(gpio_pin_num, GPIO.OUT)
+
 
 if __name__ == '__main__':
-    print __name__
+    # GPIO.setmode(GPIO.BCM)
+    # initGPIOOutput()
     pass
