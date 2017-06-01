@@ -27,7 +27,7 @@ except:
     exit(-1)
 
 
-def processArguments():
+def processInputArguments():
     # argument: -gpio set/get gpio_gen_1 gpio_gen_2
     if arg.gpio:
         # print arg.gpio
@@ -75,4 +75,5 @@ def initGPIOOutput():
 if __name__ == '__main__':
     # GPIO.setmode(GPIO.BCM)
     # initGPIOOutput()
+    processInputArguments()
     pass
