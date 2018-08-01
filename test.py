@@ -1,4 +1,15 @@
 import argparse
+import subprocess
+
+def execute(cmd, is_print = 1):
+	proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+	output = ''
+	for line in iter(proc.stdout.readline,''):
+		save_log(line.rstrip(), is_print)
+		output += line.rstrip() + "\n"
+	proc.communicate()[0]
+	proc.wait()
+	return output
 
 parser = argparse.ArgumentParser(description='Testing')
 parser.add_argument('-t', '--test',
